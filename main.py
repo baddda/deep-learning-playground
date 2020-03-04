@@ -37,12 +37,14 @@ def main():
 
     # Swap key with value. E.g. 'brights': 63815 -> 63815: 'brights'
     reverse_word_index = dict([(value, key) for (key, value) in word_index.items()])
-
-    print(decode_word(train_data[4], reverse_word_index))
     
     # Set up nodes.
     # Will look like this: 10000 nodes -> 16 nodes -> 16 nodes -> 1 nodes
     # The activiation function is the function on how the combined input to a node should be passed to the next node.
+    # Without a activiation function the neural network function would consist of linear operations. 
+    # The hypothesis space of the layer would be much lower with linear operations only. For example an simple addition is also an linear operation.
+    # And since f(x + y) = f(x) + f(y) is true, we would not benefit of chaining them in order to get a larger hypthotesis space for x and y.
+    # The hypothesis space is just the space of all the possible values for the parameters of our neural network function. (The parameters which are adjusted through the learning process)
     model = models.Sequential()
     model.add(layers.Dense(16, activation='relu', input_shape=(10000,)))
     model.add(layers.Dense(16, activation='relu'))
@@ -58,5 +60,19 @@ def main():
     model.fit(x_train, y_train, epochs=4, batch_size=512)
     results = model.evaluate(x_test, y_test)
 
+    prediction = model.predict(x_test)
+
+    current_position = 0
+    while True:
+        print(decode_word(train_data[current_position], reverse_word_index))
+        print('Accuracy: ' + str(prediction[current_position]))
+        readable_lable = ''
+        if y_test[current_position] == 1:
+            readable_lable = 'Positive'
+        else:
+            readable_lable = 'Negative'
+        print('Label: ' + readable_lable)
+        current_position = current_position + 1
+        input("Press Enter to show next...")
 
 main()
