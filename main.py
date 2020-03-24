@@ -64,7 +64,7 @@ def main():
 
     current_position = 0
     while True:
-        print(decode_word(train_data[current_position], reverse_word_index))
+        print(decode_word(test_data[current_position], reverse_word_index))
         print('Accuracy: ' + str(prediction[current_position]))
         readable_lable = ''
         if y_test[current_position] == 1:
